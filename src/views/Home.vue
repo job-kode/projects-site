@@ -37,18 +37,8 @@
         </v-tooltip>
       </v-layout>
 
-      <v-card
-        v-for="project in projects"
-        :key="project.title"
-        class="mb-6"
-        flat
-      >
-        <v-layout
-          row
-          wrap
-          :class="`pa-5 project ${project.status}`"
-          style="background:#f5f5f5;"
-        >
+      <v-card v-for="project in projects" :key="project.title" class="mb-4" flat>
+        <v-layout row wrap :class="`pa-2 pl-5 project ${project.status}`" style="background:#f5f5f5;">
           <v-flex xs12 md6>
             <div class="caption grey--text">프로젝트 이름</div>
             <div>{{ project.title }}</div>
@@ -75,41 +65,57 @@
 </template>
 
 <script>
+import db from '@/firebase'
+
 export default {
   data() {
     return {
-      projects: [
-        {
-          title: '신규 웹사이트 개발',
-          person: 'Min ho',
-          due: '2021.01.01',
-          status: 'Proceeding',
-          content:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos iste magni officia maiores voluptatum, temporibus assumenda? Voluptas doloribus asperiores laborum aliquam id delectus minus mollitia. Quo accusamus distinctio iusto mollitia?',
-        },
-        {
-          title: '메인페이지 코딩 작업',
-          person: 'Terry',
-          due: '2022.01.02',
-          status: 'Complete',
-          content:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate nostrum in commodi quia quaerat, neque maiores alias quo dolore. Placeat, perspiciatis. Distinctio magni debitis vel velit, error natus dolore sunt!',
-        },
-        {
-          title: '웹사이트 커뮤니티 게시판 수정',
-          person: 'Mr. Kim',
-          due: '2023.01.03',
-          status: 'Complete',
-          content:
-            'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore possimus repudiandae, magni ipsum consectetur aut pariatur expedita qui, quis deleniti eaque molestias earum, voluptate dolorem magnam distinctio velit! Possimus, minus!',
-        },
-      ],
+      projects:[],
+      // projects: [
+      //   {
+      //     title: '신규 웹사이트 개발',
+      //     person: 'Min ho',
+      //     due: '2021.01.01',
+      //     status: 'Proceeding',
+      //     content:
+      //       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos iste magni officia maiores voluptatum, temporibus assumenda? Voluptas doloribus asperiores laborum aliquam id delectus minus mollitia. Quo accusamus distinctio iusto mollitia?',
+      //   },
+      //   {
+      //     title: '메인페이지 코딩 작업',
+      //     person: 'Terry',
+      //     due: '2022.01.02',
+      //     status: 'Complete',
+      //     content:
+      //       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate nostrum in commodi quia quaerat, neque maiores alias quo dolore. Placeat, perspiciatis. Distinctio magni debitis vel velit, error natus dolore sunt!',
+      //   },
+      //   {
+      //     title: '웹사이트 커뮤니티 게시판 수정',
+      //     person: 'Mr. Kim',
+      //     due: '2023.01.03',
+      //     status: 'Complete',
+      //     content:
+      //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore possimus repudiandae, magni ipsum consectetur aut pariatur expedita qui, quis deleniti eaque molestias earum, voluptate dolorem magnam distinctio velit! Possimus, minus!',
+      //   },
+      // ],
     }
   },
   methods: {
     sortBy(prop) {
       this.projects.sort((a, b) => (a[prop] < b[prop] ? -1 : 1))
     },
+  },
+  created() {
+    db.collection('projects').onSnapshot(res => {
+      const changes = res.docChanges()
+      changes.forEach(change => {
+        if (change.type==='added'){
+          this.projects.push({
+            ...change.doc.data(),
+            id:change.doc.id
+          })
+        }
+      })
+    })
   },
 }
 </script>

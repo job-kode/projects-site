@@ -1,5 +1,9 @@
 <template>
   <nav>
+    <v-snackbar v-model="snackbar" :timeout="4000" top color="primary">
+      <span>프로젝트가 성공적으로 추가 되었습니다.</span>
+      <v-btn class="ml-5" @click="snackbar=false">닫기</v-btn>
+    </v-snackbar>
     <v-app-bar flat app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-app-bar-title>
@@ -15,7 +19,7 @@
         <v-menu offset-y>
           <template v-slot:activator="{on, attrs}">
             <v-btn dark v-bind="attrs" v-on="on">
-              Menu
+              <h4>메뉴</h4>
             </v-btn>
           </template>
           <v-list>
@@ -43,7 +47,7 @@
           </p>
         </v-flex>
         <v-flex class="mt-2 mb-4">
-          <Popup />
+          <Popup @projectAdded="snackbar=true" />
         </v-flex>
       </v-layout>
       <v-list>
@@ -70,6 +74,7 @@ export default {
   data() {
     return {
       drawer: true,
+      snackbar: false,
       links: [
         {icon: 'mdi-view-dashboard', text: 'Home', route: '/'},
         {icon: 'mdi-webpack ', text: 'Projects', route: '/projects'},
