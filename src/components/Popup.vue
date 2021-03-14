@@ -54,7 +54,7 @@
 
 <script>
 // import format from 'date-fns/format'
-import db from '@/firebase'
+// import db from '@/firebase'
 
 export default {
   data() {
@@ -80,14 +80,19 @@ export default {
           person: 'Mr. Kim',
           status: 'Proceeding',
         }
-        db.collection('projects')
-          .add(project)
-          .then(() => {
-            console.log('added to db')
-            this.loading = false
-            this.dialog = false
-            this.$emit('projectAdded')
-          })
+        console.log('added to db')
+        console.log(project)
+        this.loading = false
+        this.dialog = false
+        this.$emit('projectAdded')
+        // db.collection('projects')
+        //   .add(project)
+        //   .then(() => {
+        //     console.log('added to db')
+        //     this.loading = false
+        //     this.dialog = false
+        //     this.$emit('projectAdded')
+        //   })
       }
     },
   },
